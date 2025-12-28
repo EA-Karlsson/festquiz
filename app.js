@@ -170,13 +170,17 @@ function speak(text) {
   speechSynthesis.cancel();
 
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-GB";       // UK låter oftast bättre än US
-  u.rate = 0.9;           // lite lugnare
-  u.pitch = 1.0;          // normal ton
+
+  // Låt iOS välja bästa röst själv
+  u.lang = "en-US";
+  u.rate = 0.95;   // lite lugnare, mer naturligt
+  u.pitch = 1.0;
 
   const voices = speechSynthesis.getVoices();
+
+  // Försök välja Samantha (Enhanced) om den finns
   const preferred = voices.find(v =>
-    v.lang.startsWith("en") && v.name.toLowerCase().includes("daniel")
+    v.lang === "en-US" && v.name.toLowerCase().includes("samantha")
   );
 
   if (preferred) {
@@ -185,5 +189,6 @@ function speak(text) {
 
   speechSynthesis.speak(u);
 }
+
 
 
