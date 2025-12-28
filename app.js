@@ -92,8 +92,9 @@ async function startQuiz() {
 
 /* ===== QUIZ ===== */
 function showQuestion() {
-    clearInterval(timer);
+    console.log("QUESTION:", questions[currentIndex]);
 
+    clearInterval(timer);
     const q = questions[currentIndex];
     questionText.innerHTML = decode(q.question);
     answersDiv.innerHTML = "";
