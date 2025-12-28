@@ -6,71 +6,73 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* 🚫 ingen scroll */
-}
-
-body {
   background: #111;
   color: #fff;
   font-family: Arial, sans-serif;
-  text-align: center;
 }
 
-/* GENERELL LAYOUT */
+/* ===== SKÄRMAR ===== */
 #startScreen,
 #quizScreen,
 #resultScreen {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 16px;
+  justify-content: space-between; /* 🔑 viktigt */
+  padding: 12px;
 }
 
-/* RUBRIKER */
+/* ===== RUBRIKER ===== */
 h1 {
-  font-size: clamp(32px, 6vw, 48px);
-  margin-bottom: 10px;
+  font-size: clamp(26px, 6vw, 42px);
+  margin: 6px 0;
 }
 
 h2 {
-  font-size: clamp(22px, 4.5vw, 32px);
-  margin-bottom: 10px;
+  font-size: clamp(18px, 4.5vw, 28px);
+  margin: 6px 0;
 }
 
-/* KNAPPAR */
+/* ===== KNAPPAR & SELECT ===== */
 button, select {
-  font-size: clamp(16px, 3.5vw, 20px);
-  padding: 12px 18px;
-  margin: 6px;
+  font-size: clamp(14px, 3.5vw, 18px);
+  padding: 10px 14px;
+  margin: 4px;
 }
 
-/* FRÅGA */
+/* ===== FRÅGA ===== */
 #questionText {
-  font-size: clamp(20px, 5vw, 34px);
-  margin-bottom: 12px;
+  font-size: clamp(18px, 5vw, 30px);
+  margin: 8px 0;
 }
 
-/* SVAR */
+/* ===== SVAR ===== */
 #answers {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  flex-grow: 1; /* 🔑 tar tillgänglig plats */
 }
 
 .answer {
-  font-size: clamp(16px, 4vw, 26px);
+  font-size: clamp(14px, 4vw, 22px);
+  line-height: 1.2;
 }
 
-/* TIMER */
+/* ===== TIMER ===== */
 #timer {
-  margin-top: 12px;
-  font-size: clamp(18px, 4vw, 26px);
+  font-size: clamp(16px, 4vw, 24px);
   color: #ffcc00;
+  margin-top: 6px;
 }
 
-/* HJÄLP */
+/* ===== RESULTAT ===== */
+#results {
+  overflow-y: auto; /* ENDA stället där scroll tillåts */
+  font-size: clamp(14px, 3.5vw, 18px);
+}
+
+/* ===== HJÄLP ===== */
 .hidden {
   display: none;
 }
