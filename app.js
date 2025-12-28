@@ -172,7 +172,7 @@ function speak(text) {
   const u = new SpeechSynthesisUtterance(text);
 
   // Låt iOS välja bästa röst själv
-  u.lang = "en-US";
+  u.lang = "sv-SE";
   u.rate = 0.95;   // lite lugnare, mer naturligt
   u.pitch = 1.0;
 
