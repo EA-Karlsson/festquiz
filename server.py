@@ -1,8 +1,15 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import requests
 import os
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DEEPL_KEY = os.getenv("DEEPL_API_KEY")
 
