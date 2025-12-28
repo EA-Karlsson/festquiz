@@ -1,0 +1,44 @@
+body {
+  background: #111;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 30px;
+}
+
+h1 { font-size: 48px; }
+h2 { font-size: 32px; }
+
+button {
+  font-size: 20px;
+  padding: 14px 22px;
+  margin: 8px;
+  cursor: pointer;
+}
+
+select {
+  font-size: 20px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.hidden { display: none; }
+
+#categories {
+  margin-bottom: 20px;
+}
+
+#answers {
+  margin-top: 30px;
+}
+
+.answer {
+  font-size: 26px;
+  margin: 15px 0;
+}
+
+#timer {
+  font-size: 28px;
+  margin-top: 30px;
+  color: #ffcc00;
+}
