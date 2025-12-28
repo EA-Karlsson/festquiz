@@ -16,8 +16,11 @@ const musicBtn = document.getElementById("enableSound");
 const bgMusic = document.getElementById("bgMusic");
 
 musicBtn.addEventListener("click", () => {
-  bgMusic.volume = 0.15; // justera vid behov
-  bgMusic.play();
+  bgMusic.volume = 0.15;
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch(err => {
+    alert("iOS blockerade ljudet. Testa att klicka igen.");
+  });
   musicBtn.style.display = "none";
 });
 
