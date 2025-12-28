@@ -31,15 +31,26 @@ let timeLeft = 20;
 
 const CATEGORY_IDS = ["9","11","12","21","15","23","17","22"];
 
-/* ===== KATEGORI ===== */
+/* ===== KATEGORI-KLICK (FIX) ===== */
 categoryButtons.forEach(btn => {
   btn.addEventListener("click", () => {
+    // visuellt val
+    categoryButtons.forEach(b => b.style.opacity = "0.5");
+    randomBtn.style.opacity = "0.5";
+
+    btn.style.opacity = "1";
     selectedCategory = btn.dataset.category;
   });
 });
 
 randomBtn.addEventListener("click", () => {
-  selectedCategory = CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
+  const random = CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
+  selectedCategory = random;
+
+  categoryButtons.forEach(b => {
+    b.style.opacity = b.dataset.category === random ? "1" : "0.5";
+  });
+  randomBtn.style.opacity = "1";
 });
 
 /* ===== START ===== */
