@@ -18,17 +18,15 @@ const bgMusic = document.getElementById("bgMusic");
 musicBtn.addEventListener("click", () => {
   bgMusic.volume = 0.15;
   bgMusic.currentTime = 0;
-  bgMusic.play().catch(err => {
-    alert("iOS blockerade ljudet. Testa att klicka igen.");
-  });
+  bgMusic.play();
   musicBtn.style.display = "none";
 });
 
-/* ===== QUIZ-STATE ===== */
+/* ===== STATE ===== */
 let selectedCategory = "";
 let questions = [];
 let currentIndex = 0;
-let timer;
+let timer = null;
 let timeLeft = 20;
 
 const CATEGORY_IDS = ["9","11","12","21","15","23","17","22"];
@@ -36,22 +34,13 @@ const CATEGORY_IDS = ["9","11","12","21","15","23","17","22"];
 /* ===== KATEGORI ===== */
 categoryButtons.forEach(btn => {
   btn.addEventListener("click", () => {
-    selectCategory(btn.dataset.category, btn);
+    selectedCategory = btn.dataset.category;
   });
 });
 
 randomBtn.addEventListener("click", () => {
-  const random = CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
-  const btn = [...categoryButtons].find(b => b.dataset.category === random);
-  selectCategory(random, btn);
+  selectedCategory = CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
 });
-
-function selectCategory(category, button) {
-  selectedCategory = category;
-  categoryButtons.forEach(b => b.style.opacity = "0.5");
-  randomBtn.style.opacity = "0.5";
-  button.style.opacity = "1";
-}
 
 /* ===== START ===== */
 startBtn.addEventListener("click", startQuiz);
@@ -67,8 +56,8 @@ async function startQuiz() {
     const res = await fetch(
       `https://opentdb.com/api.php?amount=${count}&type=multiple${categoryParam}`
     );
-    const data = await res.json();
 
+    const data = await res.json();
     if (!data.results || data.results.length === 0) {
       throw new Error("Inga frågor");
     }
@@ -80,8 +69,8 @@ async function startQuiz() {
     quizScreen.classList.remove("hidden");
 
     showQuestion();
-  } catch {
-    alert("Kunde inte hämta frågor. Vänta lite och försök igen.");
+  } catch (e) {
+    alert("Kunde inte starta quizet.");
     startBtn.disabled = false;
     startBtn.textContent = "Starta quiz";
   }
@@ -89,24 +78,19 @@ async function startQuiz() {
 
 /* ===== QUIZ ===== */
 function showQuestion() {
-  resetTimer();
+  clearInterval(timer);
 
   const q = questions[currentIndex];
   questionText.innerHTML = decode(q.question);
-
   answersDiv.innerHTML = "";
 
-  const allAnswers = shuffle([
-    q.correct_answer,
-    ...q.incorrect_answers
-  ]);
-
+  const answers = shuffle([q.correct_answer, ...q.incorrect_answers]);
   const labels = ["A", "B", "C", "D"];
 
-  allAnswers.forEach((answer, index) => {
+  answers.forEach((a, i) => {
     const div = document.createElement("div");
     div.className = "answer";
-    div.innerHTML = `<strong>${labels[index]}.</strong> ${decode(answer)}`;
+    div.innerHTML = `<strong>${labels[i]}.</strong> ${decode(a)}`;
     answersDiv.appendChild(div);
   });
 
@@ -120,28 +104,33 @@ function startTimer() {
   timer = setInterval(() => {
     timeLeft--;
     timerText.textContent = `Tid kvar: ${timeLeft}`;
-    if (timeLeft === 0) nextQuestion();
+
+    if (timeLeft <= 0) {
+      nextQuestion();
+    }
   }, 1000);
 }
 
-function resetTimer() {
-  clearInterval(timer);
-}
-
 function nextQuestion() {
-  resetTimer();
+  clearInterval(timer);
   currentIndex++;
-  currentIndex < questions.length ? showQuestion() : showResults();
+
+  if (currentIndex < questions.length) {
+    showQuestion();
+  } else {
+    showResults();
+  }
 }
 
 /* ===== FACIT ===== */
 function showResults() {
-  // 🔇 STOPPA MUSIK VID FACIT
+  clearInterval(timer);
   bgMusic.pause();
   bgMusic.currentTime = 0;
 
   quizScreen.classList.add("hidden");
   resultScreen.classList.remove("hidden");
+
   resultsDiv.innerHTML = "";
 
   questions.forEach(q => {
@@ -165,7 +154,3 @@ function decode(text) {
   t.innerHTML = text;
   return t.value;
 }
-
-
-
-
