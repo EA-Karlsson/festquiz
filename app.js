@@ -11,16 +11,14 @@ const resultsDiv = document.getElementById("results");
 const categoryButtons = document.querySelectorAll("#categories button[data-category]");
 const randomBtn = document.getElementById("randomCategory");
 
-/* ===== LJUD (iOS-säker) ===== */
-const enableSoundBtn = document.getElementById("enableSound");
-let soundEnabled = false;
+/* ===== MUSIK ===== */
+const musicBtn = document.getElementById("enableSound");
+const bgMusic = document.getElementById("bgMusic");
 
-enableSoundBtn.addEventListener("click", () => {
-  const u = new SpeechSynthesisUtterance("Ljud aktiverat");
-  u.lang = "en-US";
-  speechSynthesis.speak(u);
-  soundEnabled = true;
-  enableSoundBtn.style.display = "none";
+musicBtn.addEventListener("click", () => {
+  bgMusic.volume = 0.15; // justera vid behov
+  bgMusic.play();
+  musicBtn.style.display = "none";
 });
 
 /* ===== QUIZ-STATE ===== */
@@ -91,10 +89,7 @@ function showQuestion() {
   resetTimer();
 
   const q = questions[currentIndex];
-  const question = decode(q.question);
-
-  questionText.innerHTML = question;
-  speak(question);
+  questionText.innerHTML = decode(q.question);
 
   answersDiv.innerHTML = "";
 
@@ -138,6 +133,10 @@ function nextQuestion() {
 
 /* ===== FACIT ===== */
 function showResults() {
+  // 🔇 STOPPA MUSIK VID FACIT
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+
   quizScreen.classList.add("hidden");
   resultScreen.classList.remove("hidden");
   resultsDiv.innerHTML = "";
@@ -164,31 +163,6 @@ function decode(text) {
   return t.value;
 }
 
-function speak(text) {
-  if (!soundEnabled) return;
-
-  speechSynthesis.cancel();
-
-  const u = new SpeechSynthesisUtterance(text);
-
-  // Låt iOS välja bästa röst själv
-  u.lang = "sv-SE";
-  u.rate = 0.95;   // lite lugnare, mer naturligt
-  u.pitch = 1.0;
-
-  const voices = speechSynthesis.getVoices();
-
-  // Försök välja Samantha (Enhanced) om den finns
-  const preferred = voices.find(v =>
-    v.lang === "en-US" && v.name.toLowerCase().includes("samantha")
-  );
-
-  if (preferred) {
-    u.voice = preferred;
-  }
-
-  speechSynthesis.speak(u);
-}
 
 
 

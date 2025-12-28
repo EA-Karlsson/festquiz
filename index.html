@@ -12,8 +12,8 @@
   <div id="startScreen">
     <h1>🎉 FestQuiz</h1>
 
-    <!-- VIKTIG FÖR iPHONE -->
-    <button id="enableSound">🔊 Aktivera ljud</button>
+    <!-- STARTA MUSIK (iOS-krav) -->
+    <button id="enableSound">🎵 Starta musik</button>
 
     <h2>Välj kategori</h2>
     <div id="categories">
@@ -53,7 +53,11 @@
     <div id="results"></div>
   </div>
 
+  <!-- BAKGRUNDSMUSIK -->
+  <audio id="bgMusic" src="music.mp3" loop></audio>
+
   <script src="app.js"></script>
 </body>
 </html>
+
 
