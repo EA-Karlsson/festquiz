@@ -166,10 +166,24 @@ function decode(text) {
 
 function speak(text) {
   if (!soundEnabled) return;
+
   speechSynthesis.cancel();
+
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-US";
-  u.rate = 0.9;
+  u.lang = "en-GB";       // UK låter oftast bättre än US
+  u.rate = 0.9;           // lite lugnare
+  u.pitch = 1.0;          // normal ton
+
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v =>
+    v.lang.startsWith("en") && v.name.toLowerCase().includes("daniel")
+  );
+
+  if (preferred) {
+    u.voice = preferred;
+  }
+
   speechSynthesis.speak(u);
 }
+
 
