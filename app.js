@@ -11,16 +11,28 @@ const resultsDiv = document.getElementById("results");
 const categoryButtons = document.querySelectorAll("#categories button[data-category]");
 const randomBtn = document.getElementById("randomCategory");
 
+/* ===== LJUD (iOS-säker) ===== */
+const enableSoundBtn = document.getElementById("enableSound");
+let soundEnabled = false;
+
+enableSoundBtn.addEventListener("click", () => {
+  const u = new SpeechSynthesisUtterance("Ljud aktiverat");
+  u.lang = "en-US";
+  speechSynthesis.speak(u);
+  soundEnabled = true;
+  enableSoundBtn.style.display = "none";
+});
+
+/* ===== QUIZ-STATE ===== */
 let selectedCategory = "";
 let questions = [];
 let currentIndex = 0;
 let timer;
 let timeLeft = 20;
 
-// Alla kategorier som kan slumpas
 const CATEGORY_IDS = ["9","11","12","21","15","23","17","22"];
 
-/* ===== KATEGORI-VAL ===== */
+/* ===== KATEGORI ===== */
 categoryButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     selectCategory(btn.dataset.category, btn);
@@ -153,6 +165,7 @@ function decode(text) {
 }
 
 function speak(text) {
+  if (!soundEnabled) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "en-US";
