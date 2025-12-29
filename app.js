@@ -43,35 +43,44 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-// ================== KATEGORIER ==================
-categoryButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        categoryButtons.forEach(b => (b.style.opacity = "0.5"));
-        randomBtn.style.opacity = "0.5";
+    // ================== KATEGORIER ==================
+    categoryButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            // Rensa alla markeringar
+            categoryButtons.forEach(b => {
+                b.style.opacity = "0.5";
+                b.classList.remove("active");
+            });
+            randomBtn.style.opacity = "0.5";
+            randomBtn.classList.remove("active");
 
-        btn.style.opacity = "1";
+            // Markera vald knapp
+            btn.style.opacity = "1";
+            btn.classList.add("active");
 
-        if (btn.dataset.category === "modern") {
-            selectedCategory =
-                MODERN_CATEGORIES[Math.floor(Math.random() * MODERN_CATEGORIES.length)];
-        } else {
-            selectedCategory = btn.dataset.category;
-        }
-    });
-});
-
-randomBtn.addEventListener("click", () => {
-    const random =
-        CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
-    selectedCategory = random;
-
-    categoryButtons.forEach(b => {
-        b.style.opacity =
-            b.dataset.category === random ? "1" : "0.5";
+            // Hantera kategori
+            if (btn.dataset.category === "modern") {
+                selectedCategory =
+                    MODERN_CATEGORIES[Math.floor(Math.random() * MODERN_CATEGORIES.length)];
+            } else {
+                selectedCategory = btn.dataset.category;
+            }
+        });
     });
 
-    randomBtn.style.opacity = "1";
-});
+    randomBtn.addEventListener("click", () => {
+        const random =
+            CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
+        selectedCategory = random;
+
+        categoryButtons.forEach(b => {
+            b.style.opacity = b.dataset.category === random ? "1" : "0.5";
+            b.classList.toggle("active", b.dataset.category === random);
+        });
+
+        randomBtn.style.opacity = "1";
+        randomBtn.classList.add("active");
+    });
 
     // ================== START ==================
     startBtn.addEventListener("click", () =>
