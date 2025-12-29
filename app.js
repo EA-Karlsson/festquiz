@@ -57,6 +57,14 @@ randomBtn.addEventListener("click", () => {
 startBtn.addEventListener("click", startQuiz);
 
 async function startQuiz() {
+    console.log({
+        startScreen,
+        quizScreen,
+        questionText,
+        answersDiv,
+        startBtn
+    });
+
     startBtn.disabled = true;
     startBtn.textContent = "Laddar frågor...";
 
@@ -80,9 +88,12 @@ async function startQuiz() {
         return;
     }
 
-    // ⬇️ VIKTIGT: detta ligger UTANFÖR try/catch
     showQuestion();
 }
+
+// ⬇️ VIKTIGT: detta ligger UTANFÖR try/catch
+showQuestion();
+
 
 /* ===== QUIZ ===== */
 function showQuestion() {
