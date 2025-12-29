@@ -190,14 +190,19 @@ function showQuestion(questionText, answersDiv) {
     const labels = ["A", "B", "C", "D"];
 
     answers.forEach((a, i) => {
-        const div = document.createElement("div");
-        div.className = "answer";
-        div.innerHTML = `<strong>${labels[i]}.</strong> ${a}`;
-        answersDiv.appendChild(div);
-    });
+    const div = document.createElement("div");
+    div.className = "answer";
+    div.innerHTML = `<strong>${labels[i]}.</strong> ${a}`;
+    answersDiv.appendChild(div);
+});
 
-    startTimer(questionText, answersDiv);
+// VISA NÄSTA-KNAPPEN
+const nextBtn = document.getElementById("nextBtn");
+if (nextBtn) {
+    nextBtn.classList.remove("hidden");
 }
+
+startTimer(questionText, answersDiv);
 
 // ================== NEXT QUESTION ==================
 function nextQuestion(questionText, answersDiv) {
