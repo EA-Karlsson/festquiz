@@ -1,54 +1,61 @@
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 12px;
-  background: #111;
-  color: #fff;
-  font-family: Arial, sans-serif;
-  text-align: center;
+    margin: 0;
+    padding: 12px;
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 h1 {
-  font-size: 32px;
-  margin: 10px 0;
+    font-size: 32px;
+    margin: 10px 0;
 }
 
 h2 {
-  font-size: 22px;
-  margin: 10px 0;
+    font-size: 22px;
+    margin: 10px 0;
 }
 
-button, select {
-  font-size: 16px;
-  padding: 10px 14px;
-  margin: 6px;
+button,
+select {
+    font-size: 16px;
+    padding: 10px 14px;
+    margin: 6px;
 }
 
 #questionText {
-  font-size: 22px;
-  margin: 12px 0;
+    font-size: 22px;
+    margin: 12px 0;
 }
 
 #answers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
 }
 
 .answer {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 #timer {
-  margin-top: 12px;
-  font-size: 18px;
-  color: #ffcc00;
+    margin-top: 12px;
+    font-size: 18px;
+    color: #ffcc00;
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
 
+.restart-btn {
+    margin-top: 20px;
+    padding: 12px 20px;
+    font-size: 18px;
+    cursor: pointer;
+}

@@ -107,11 +107,35 @@ function showQuestion(questionText, answersDiv) {
 // ================== NEXT QUESTION ==================
 function nextQuestion(questionText, answersDiv) {
     currentIndex++;
+
     if (currentIndex >= questions.length) {
-        questionText.textContent = "Quiz klart 🎉";
-        answersDiv.innerHTML = "";
+        clearInterval(timer);
+
+        questionText.textContent = "🎉 Quiz klart!";
+        answersDiv.innerHTML = `
+            <button id="restartBtn" class="restart-btn">
+                Till startsidan
+            </button>
+        `;
+
+        document.getElementById("restartBtn").addEventListener("click", () => {
+            // återställ state
+            questions = [];
+            currentIndex = 0;
+
+            // visa start, göm quiz
+            document.getElementById("quizScreen").classList.add("hidden");
+            document.getElementById("startScreen").classList.remove("hidden");
+
+            // återställ knapptext
+            const startBtn = document.getElementById("startBtn");
+            startBtn.disabled = false;
+            startBtn.textContent = "Starta quiz";
+        });
+
         return;
     }
+
     showQuestion(questionText, answersDiv);
 }
 
