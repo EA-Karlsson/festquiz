@@ -20,9 +20,11 @@ DEEPL_URL = "https://api-free.deepl.com/v2/translate"
 VERB_HINTS = {" is ", " are ", " was ", " were ", " did ", " does ", " has ", " have "}
 
 MEDIA_KEYWORDS = [
-    "film", "movie", "album", "song", "track",
+    "film", "movie", "album", "song", "track", "music",
     "band", "artist", "game", "video game",
-    "character", "series", "quote", "citat",
+    "character", "series", "tv",
+    "drake", "beatles", "daft punk", "nirvana",
+    "portal", "half-life", "mirror's edge",
     "låten", "albumet", "bandet", "artisten",
     "spelet", "karaktären", "tv-serien"
 ]
@@ -116,7 +118,7 @@ def quiz(amount: int = 10, category: str = ""):
 
         question_text = smart_translate(raw_question)
 
-        if is_media_question(question_text):
+        if is_media_question(raw_question):
             # MEDIA → svar ska ALDRIG översättas
             correct = raw_correct
             incorrect = raw_incorrect
