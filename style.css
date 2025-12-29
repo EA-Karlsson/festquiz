@@ -78,8 +78,10 @@ button:active {
 /* Förberedd tydlig markering av vald kategori */
 #categories button.active {
     opacity: 1 !important;
-    outline: 2px solid #ffcc00;
-    outline-offset: 2px;
+    background: #2a2a2a;
+    outline: 3px solid #ffcc00;
+    outline-offset: 3px;
+    box-shadow: 0 0 12px rgba(255, 204, 0, 0.6);
 }
 
 /* Fråga */

@@ -154,6 +154,11 @@ async function startQuiz(
 function showQuestion(questionText, answersDiv) {
     clearInterval(timer);
 
+    const progressEl = document.getElementById("progress");
+    if (progressEl) {
+        progressEl.textContent = `Fråga ${currentIndex + 1} / ${questions.length}`;
+    }
+
     const q = questions[currentIndex];
     if (!q || !q.correct_answer || !Array.isArray(q.incorrect_answers)) {
         nextQuestion(questionText, answersDiv);
