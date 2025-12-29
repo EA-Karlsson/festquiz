@@ -2,11 +2,10 @@
 <html lang="sv">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FestQuiz</title>
-
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <title>🎉 FestQuiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -15,23 +14,36 @@
     <div id="startScreen">
         <h1>🎉 FestQuiz</h1>
 
-        <button id="startBtn">Starta quiz</button>
-
-        <div style="margin-top: 20px;">
-            <label for="questionCount">Antal frågor:</label>
-            <select id="questionCount">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-            </select>
+        <h2>Välj kategori</h2>
+        <div id="categories">
+            <button data-category="">Alla</button>
+            <button data-category="9">Allmänbildning</button>
+            <button data-category="11">Film</button>
+            <button data-category="12">Musik</button>
+            <button data-category="21">Sport</button>
+            <button data-category="15">TV & Spel</button>
+            <button data-category="23">Historia</button>
+            <button data-category="17">Vetenskap</button>
+            <button data-category="22">Geografi</button>
+            <button id="randomCategory">🎲 Slumpa kategori</button>
         </div>
+
+        <h2>Antal frågor</h2>
+        <select id="questionCount">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
+
+        <button id="startBtn">Starta quiz</button>
     </div>
 
-    <!-- QUIZSKÄRM -->
+    <!-- QUIZ -->
     <div id="quizScreen" class="hidden">
         <h2 id="questionText"></h2>
         <div id="answers"></div>
+        <p id="timer">Tid kvar: 20</p>
     </div>
 
     <script src="app.js"></script>
