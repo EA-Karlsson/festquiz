@@ -190,76 +190,76 @@ function showQuestion(questionText, answersDiv) {
     const labels = ["A", "B", "C", "D"];
 
     answers.forEach((a, i) => {
-    const div = document.createElement("div");
-    div.className = "answer";
-    div.innerHTML = `<strong>${labels[i]}.</strong> ${a}`;
-    answersDiv.appendChild(div);
-});
+        const div = document.createElement("div");
+        div.className = "answer";
+        div.innerHTML = `<strong>${labels[i]}.</strong> ${a}`;
+        answersDiv.appendChild(div);
+    });
 
-// VISA NÄSTA-KNAPPEN
-const nextBtn = document.getElementById("nextBtn");
-if (nextBtn) {
-    nextBtn.classList.remove("hidden");
-}
-
-startTimer(questionText, answersDiv);
-
-// ================== NEXT QUESTION ==================
-function nextQuestion(questionText, answersDiv) {
-    currentIndex++;
-
-    if (currentIndex >= questions.length) {
-        showFacit();
-        return;
+    // VISA NÄSTA-KNAPPEN
+    const nextBtn = document.getElementById("nextBtn");
+    if (nextBtn) {
+        nextBtn.classList.remove("hidden");
     }
 
-    showQuestion(questionText, answersDiv);
-}
+    startTimer(questionText, answersDiv);
 
-// ================== TIMER ==================
-function startTimer(questionText, answersDiv) {
-    clearInterval(timer);
+    // ================== NEXT QUESTION ==================
+    function nextQuestion(questionText, answersDiv) {
+        currentIndex++;
 
-    const timerEl = document.getElementById("timer");
-    let time = 30;
+        if (currentIndex >= questions.length) {
+            showFacit();
+            return;
+        }
 
-    timerEl.textContent = `Tid kvar: ${time}`;
+        showQuestion(questionText, answersDiv);
+    }
 
-    timer = setInterval(() => {
-        time--;
+    // ================== TIMER ==================
+    function startTimer(questionText, answersDiv) {
+        clearInterval(timer);
+
+        const timerEl = document.getElementById("timer");
+        let time = 30;
+
         timerEl.textContent = `Tid kvar: ${time}`;
 
-        if (time <= 0) {
-            clearInterval(timer);
-            timerEl.textContent = "Tiden är slut – tryck Nästa";
-        }
-    }, 1000);
-}
+        timer = setInterval(() => {
+            time--;
+            timerEl.textContent = `Tid kvar: ${time}`;
 
-// ================== FACIT ==================
-function showFacit() {
-    // Stoppa musiken alltid vid facit
-    music.pause();
-    music.currentTime = 0;
-
-    const musicBtn = document.getElementById("musicBtn");
-    if (musicBtn) {
-        musicBtn.textContent = "▶️ Starta musik";
+            if (time <= 0) {
+                clearInterval(timer);
+                timerEl.textContent = "Tiden är slut – tryck Nästa";
+            }
+        }, 1000);
     }
 
-    clearInterval(timer);
-    mode = "facit";
+    // ================== FACIT ==================
+    function showFacit() {
+        // Stoppa musiken alltid vid facit
+        music.pause();
+        music.currentTime = 0;
 
-    const questionText = document.getElementById("questionText");
-    const answersDiv = document.getElementById("answers");
+        const musicBtn = document.getElementById("musicBtn");
+        if (musicBtn) {
+            musicBtn.textContent = "▶️ Starta musik";
+        }
 
-    // Titel
-    questionText.innerHTML = `<span class="facit-title">✅ Facit</span>`;
+        clearInterval(timer);
+        mode = "facit";
 
-    // Facit-lista
-    answersDiv.innerHTML = results
-        .map((item, index) => {
-            return `
+        const questionText = document.getElementById("questionText");
+        const answersDiv = document.getElementById("answers");
+
+        // Titel
+        questionText.innerHTML = `<span class="facit-title">✅ Facit</span>`;
+
+        // Facit-lista
+        answersDiv.innerHTML = results
+            .map((item, index) => {
+                return `
                 <div class="facit-item">
                     <strong>${index + 1}. ${item.question}</strong>
                     <div class="facit-answer">
@@ -267,35 +267,36 @@ function showFacit() {
                     </div>
                 </div>
             `;
-        })
-        .join("");
+            })
+            .join("");
 
-    // Tillbaka-knapp
-    const btn = document.createElement("button");
-    btn.textContent = "Till startsidan";
-    btn.className = "restart-btn";
+        // Tillbaka-knapp
+        const btn = document.createElement("button");
+        btn.textContent = "Till startsidan";
+        btn.className = "restart-btn";
 
-    btn.addEventListener("click", () => {
-        results = [];
-        questions = [];
-        currentIndex = 0;
-        mode = "quiz";
+        btn.addEventListener("click", () => {
+            results = [];
+            questions = [];
+            currentIndex = 0;
+            mode = "quiz";
 
-        document.getElementById("quizScreen").classList.add("hidden");
-        document.getElementById("startScreen").classList.remove("hidden");
+            document.getElementById("quizScreen").classList.add("hidden");
+            document.getElementById("startScreen").classList.remove("hidden");
 
-        const startBtn = document.getElementById("startBtn");
-        startBtn.disabled = false;
-        startBtn.textContent = "Starta quiz";
-    });
+            const startBtn = document.getElementById("startBtn");
+            startBtn.disabled = false;
+            startBtn.textContent = "Starta quiz";
+        });
 
-    answersDiv.appendChild(btn);
-}
+        answersDiv.appendChild(btn);
+    }
 
-// ================== UTILS ==================
-function shuffle(arr) {
-    return arr
-        .map(v => ({ v, s: Math.random() }))
-        .sort((a, b) => a.s - b.s)
-        .map(x => x.v);
+    // ================== UTILS ==================
+    function shuffle(arr) {
+        return arr
+            .map(v => ({ v, s: Math.random() }))
+            .sort((a, b) => a.s - b.s)
+            .map(x => x.v);
+    }
 }
