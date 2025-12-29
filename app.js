@@ -12,6 +12,7 @@ let results = [];     // sparar facitdata
 let mode = "quiz";    // quiz | facit
 
 const CATEGORY_IDS = ["9", "11", "12", "21", "15", "23", "17", "22"];
+const MODERN_CATEGORIES = ["11", "12", "15", "9", "17"];
 
 // ================== DOM READY ==================
 document.addEventListener("DOMContentLoaded", () => {
@@ -42,29 +43,35 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // ================== KATEGORIER ==================
-    categoryButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            categoryButtons.forEach(b => (b.style.opacity = "0.5"));
-            randomBtn.style.opacity = "0.5";
+// ================== KATEGORIER ==================
+categoryButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        categoryButtons.forEach(b => (b.style.opacity = "0.5"));
+        randomBtn.style.opacity = "0.5";
 
-            btn.style.opacity = "1";
+        btn.style.opacity = "1";
+
+        if (btn.dataset.category === "modern") {
+            selectedCategory =
+                MODERN_CATEGORIES[Math.floor(Math.random() * MODERN_CATEGORIES.length)];
+        } else {
             selectedCategory = btn.dataset.category;
-        });
+        }
+    });
+});
+
+randomBtn.addEventListener("click", () => {
+    const random =
+        CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
+    selectedCategory = random;
+
+    categoryButtons.forEach(b => {
+        b.style.opacity =
+            b.dataset.category === random ? "1" : "0.5";
     });
 
-    randomBtn.addEventListener("click", () => {
-        const random =
-            CATEGORY_IDS[Math.floor(Math.random() * CATEGORY_IDS.length)];
-        selectedCategory = random;
-
-        categoryButtons.forEach(b => {
-            b.style.opacity =
-                b.dataset.category === random ? "1" : "0.5";
-        });
-
-        randomBtn.style.opacity = "1";
-    });
+    randomBtn.style.opacity = "1";
+});
 
     // ================== START ==================
     startBtn.addEventListener("click", () =>
