@@ -82,10 +82,9 @@ async function startQuiz() {
         quizScreen.classList.remove("hidden");
 
     } catch (e) {
-        alert("Kunde inte starta quizet.");
+        console.error("STARTQUIZ ERROR:", e);
         startBtn.disabled = false;
         startBtn.textContent = "Starta quiz";
-        return;
     }
 
     showQuestion();
@@ -93,7 +92,6 @@ async function startQuiz() {
 
 // ⬇️ VIKTIGT: detta ligger UTANFÖR try/catch
 showQuestion();
-
 
 /* ===== QUIZ ===== */
 function showQuestion() {
