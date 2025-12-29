@@ -92,11 +92,17 @@ async function startQuiz() {
 
 /* ===== QUIZ ===== */
 function showQuestion() {
-    console.log("QUESTION:", questions[currentIndex]);
-
     clearInterval(timer);
+
     const q = questions[currentIndex];
-    questionText.innerHTML = decode(q.question);
+
+    // Säkerhetskontroll – hoppa över trasiga frågor istället för att krascha
+    if (!q || !q.correct_answer || !Array.isArray(q.incorrect_answers)) {
+        nextQuestion();
+        return;
+    }
+
+    questionText.innerHTML = q.question;
     answersDiv.innerHTML = "";
 
     const answers = shuffle([q.correct_answer, ...q.incorrect_answers]);
@@ -105,7 +111,7 @@ function showQuestion() {
     answers.forEach((a, i) => {
         const div = document.createElement("div");
         div.className = "answer";
-        div.innerHTML = `<strong>${labels[i]}.</strong> ${decode(a)}`;
+        div.innerHTML = `<strong>${labels[i]}.</strong> ${a}`;
         answersDiv.appendChild(div);
     });
 
