@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import requests
 import os
 import html
+import re
 
 app = FastAPI()
 app.add_middleware(
@@ -29,6 +30,10 @@ MEDIA_KEYWORDS = [
     "spelet", "karaktären", "tv-serien"
 ]
 
+GAME_LEVEL_TERMS = {"level", "mission", "stage", "nivå"}
+
+# ------------------ DETEKTION ------------------
+
 def looks_like_name_or_title(text: str) -> bool:
     words = text.strip().split()
     if len(words) > 5:
@@ -54,12 +59,34 @@ def is_media_question(text: str) -> bool:
     return any(k in t for k in MEDIA_KEYWORDS)
 
 
+def is_game_level_question(text: str) -> bool:
+    t = text.lower()
+    return any(k in t for k in GAME_LEVEL_TERMS) and "call of duty" in t or "level" in t
+
+
 def looks_like_quote(text: str) -> bool:
     if '"' in text or "'" in text:
         return True
     if len(text.split()) > 6:
         return True
     return False
+
+# ------------------ NORMALISERING ------------------
+
+def normalize_numbers(text: str) -> str:
+    if not text:
+        return text
+
+    replacements = {
+        r"Less than (\d+)\s*Thousand": r"Mindre än \1 000",
+        r"(\d+)\s*Thousand": r"\1 000",
+        r"(\d+)\s*Million": r"\1 miljon",
+    }
+
+    for pattern, repl in replacements.items():
+        text = re.sub(pattern, repl, text, flags=re.IGNORECASE)
+
+    return text
 
 # ------------------ ÖVERSÄTTNING ------------------
 
@@ -118,23 +145,29 @@ def quiz(amount: int = 10, category: str = ""):
 
         question_text = smart_translate(raw_question)
 
+        # 1️⃣ MEDIA → inga svar översätts
         if is_media_question(raw_question):
-            # MEDIA → svar ska ALDRIG översättas
             correct = raw_correct
             incorrect = raw_incorrect
+
+        # 2️⃣ SPEL-NIVÅER → inga svar översätts
+        elif is_game_level_question(raw_question):
+            correct = raw_correct
+            incorrect = raw_incorrect
+
+        # 3️⃣ VANLIGA FAKTAFRÅGOR
         else:
-            # Icke-media → selektiv översättning
             if looks_like_quote(raw_correct):
                 correct = raw_correct
             else:
-                correct = smart_translate(raw_correct)
+                correct = normalize_numbers(smart_translate(raw_correct))
 
             incorrect = []
             for a in raw_incorrect:
                 if looks_like_quote(a):
                     incorrect.append(a)
                 else:
-                    incorrect.append(smart_translate(a))
+                    incorrect.append(normalize_numbers(smart_translate(a)))
 
         questions.append({
             "question": question_text,
