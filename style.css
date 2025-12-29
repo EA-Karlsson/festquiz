@@ -70,12 +70,12 @@ button:active {
     opacity: 0.6;
 }
 
-/* 2025 & Nutid – samma färg som övriga, bara lite tyngre text */
+/* 2025 & Nutid */
 #categories button[data-category="modern"] {
     font-weight: bold;
 }
 
-/* Förberedd tydlig markering av vald kategori */
+/* Aktiv kategori */
 #categories button.active {
     opacity: 1 !important;
     background: #2a2a2a;
@@ -88,6 +88,13 @@ button:active {
 #questionText {
     font-size: 22px;
     margin: 18px 0;
+}
+
+/* Frågenummer */
+#progress {
+    font-size: 16px;
+    opacity: 0.85;
+    margin-top: 10px;
 }
 
 /* Svar */
@@ -104,7 +111,7 @@ button:active {
     font-size: 18px;
 }
 
-/* A / B / C / D markering */
+/* A / B / C / D */
 .answer strong {
     color: #ffcc00;
     margin-right: 6px;
@@ -117,10 +124,39 @@ button:active {
     color: #ffcc00;
 }
 
-/* Facit */
+/* ================== FACIT ================== */
+
+.facit-title {
+    font-size: 26px;
+    margin: 16px 0 20px;
+}
+
+.facit-item {
+    background: #1c1c1c;
+    padding: 14px 16px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+
+.facit-item strong {
+    color: #ffcc00;
+}
+
+.facit-answer {
+    margin-top: 6px;
+    font-size: 17px;
+}
+
+.facit-answer span {
+    font-weight: bold;
+    color: #a8ff60;
+}
+
+/* Facit-knapp */
 .restart-btn {
-    margin-top: 20px;
-    padding: 12px 20px;
+    margin-top: 24px;
+    padding: 14px 22px;
     font-size: 18px;
     background: #444;
     border-radius: 12px;

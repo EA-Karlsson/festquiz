@@ -239,19 +239,24 @@ function showFacit() {
     const questionText = document.getElementById("questionText");
     const answersDiv = document.getElementById("answers");
 
-    questionText.textContent = "✅ Facit";
+    // Titel
+    questionText.innerHTML = `<span class="facit-title">✅ Facit</span>`;
 
+    // Facit-lista
     answersDiv.innerHTML = results
         .map((item, index) => {
             return `
-                <div style="margin-bottom: 16px; text-align: left;">
-                    <strong>${index + 1}. ${item.question}</strong><br>
-                    Rätt svar: <strong>${item.correct_answer}</strong>
+                <div class="facit-item">
+                    <strong>${index + 1}. ${item.question}</strong>
+                    <div class="facit-answer">
+                        Rätt svar: <span>${item.correct_answer}</span>
+                    </div>
                 </div>
             `;
         })
         .join("");
 
+    // Tillbaka-knapp
     const btn = document.createElement("button");
     btn.textContent = "Till startsidan";
     btn.className = "restart-btn";
