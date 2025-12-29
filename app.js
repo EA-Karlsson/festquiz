@@ -61,7 +61,6 @@ async function startQuiz() {
     startBtn.textContent = "Laddar frågor...";
 
     const count = document.getElementById("questionCount").value;
-    const categoryParam = selectedCategory ? `&category=${selectedCategory}` : "";
 
     try {
         const res = await fetch(
@@ -69,25 +68,20 @@ async function startQuiz() {
         );
 
         questions = await res.json();
-
-
-        const data = await res.json();
-        if (!data.results || data.results.length === 0) {
-            throw new Error("Inga frågor");
-        }
-
-        questions = data.results;
         currentIndex = 0;
 
         startScreen.classList.add("hidden");
         quizScreen.classList.remove("hidden");
 
-        showQuestion();
     } catch (e) {
         alert("Kunde inte starta quizet.");
         startBtn.disabled = false;
         startBtn.textContent = "Starta quiz";
+        return;
     }
+
+    // ⬇️ VIKTIGT: detta ligger UTANFÖR try/catch
+    showQuestion();
 }
 
 /* ===== QUIZ ===== */
