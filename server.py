@@ -22,15 +22,21 @@ VERB_HINTS = {" is ", " are ", " was ", " were ", " did ", " does ", " has ", " 
 
 MEDIA_KEYWORDS = [
     "film", "movie", "album", "song", "track", "music",
-    "band", "artist", "game", "video game",
-    "character", "series", "tv",
+    "band", "artist", "series", "tv",
     "drake", "beatles", "daft punk", "nirvana",
     "portal", "half-life", "mirror's edge",
     "låten", "albumet", "bandet", "artisten",
-    "spelet", "karaktären", "tv-serien"
+    "tv-serien"
 ]
 
-GAME_LEVEL_TERMS = {"level", "mission", "stage", "nivå"}
+GAME_KEYWORDS = [
+    "game", "video game", "zombies", "call of duty",
+    "warcraft", "world of warcraft", "wow",
+    "level", "mission", "stage", "nivå",
+    "weapon", "gun", "rifle", "crossbow",
+    "item", "perk", "ability", "stone",
+    "pack-a-punch", "pack a punch"
+]
 
 # ------------------ DETEKTION ------------------
 
@@ -59,9 +65,9 @@ def is_media_question(text: str) -> bool:
     return any(k in t for k in MEDIA_KEYWORDS)
 
 
-def is_game_level_question(text: str) -> bool:
+def is_game_question(text: str) -> bool:
     t = text.lower()
-    return any(k in t for k in GAME_LEVEL_TERMS) and "call of duty" in t or "level" in t
+    return any(k in t for k in GAME_KEYWORDS)
 
 
 def looks_like_quote(text: str) -> bool:
@@ -145,17 +151,17 @@ def quiz(amount: int = 10, category: str = ""):
 
         question_text = smart_translate(raw_question)
 
-        # 1️⃣ MEDIA → inga svar översätts
-        if is_media_question(raw_question):
+        # 🎮 SPEL → ALLA SVAR ORÖRDA (engelska)
+        if is_game_question(raw_question):
             correct = raw_correct
             incorrect = raw_incorrect
 
-        # 2️⃣ SPEL-NIVÅER → inga svar översätts
-        elif is_game_level_question(raw_question):
+        # 🎬 MEDIA (film/musik/TV) → svar orörda
+        elif is_media_question(raw_question):
             correct = raw_correct
             incorrect = raw_incorrect
 
-        # 3️⃣ VANLIGA FAKTAFRÅGOR
+        # 📚 FAKTA / ALLMÄNBILDNING
         else:
             if looks_like_quote(raw_correct):
                 correct = raw_correct
