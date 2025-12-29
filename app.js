@@ -4,6 +4,9 @@ let currentIndex = 0;
 let timer = null;
 let selectedCategory = "";
 
+let results = [];     // sparar facitdata
+let mode = "quiz";    // quiz | facit
+
 const CATEGORY_IDS = ["9", "11", "12", "21", "15", "23", "17", "22"];
 
 // ================== DOM READY ==================
@@ -18,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoryButtons = document.querySelectorAll("#categories button[data-category]");
     const randomBtn = document.getElementById("randomCategory");
 
-    // Säkerhetscheck
     if (
         !startScreen ||
         !quizScreen ||
@@ -95,6 +97,9 @@ async function startQuiz(
         }
 
         currentIndex = 0;
+        results = [];
+        mode = "quiz";
+
         startScreen.classList.add("hidden");
         quizScreen.classList.remove("hidden");
 
@@ -115,6 +120,12 @@ function showQuestion(questionText, answersDiv) {
         nextQuestion(questionText, answersDiv);
         return;
     }
+
+    // SPARA FACITDATA (visas först i slutet)
+    results.push({
+        question: q.question,
+        correct_answer: q.correct_answer
+    });
 
     questionText.textContent = q.question;
     answersDiv.innerHTML = "";
@@ -140,34 +151,7 @@ function nextQuestion(questionText, answersDiv) {
     currentIndex++;
 
     if (currentIndex >= questions.length) {
-        clearInterval(timer);
-
-        questionText.textContent = "🎉 Quiz klart!";
-        answersDiv.innerHTML = `
-            <button id="restartBtn" class="restart-btn">
-                Till startsidan
-            </button>
-        `;
-
-        document
-            .getElementById("restartBtn")
-            .addEventListener("click", () => {
-                questions = [];
-                currentIndex = 0;
-
-                document
-                    .getElementById("quizScreen")
-                    .classList.add("hidden");
-                document
-                    .getElementById("startScreen")
-                    .classList.remove("hidden");
-
-                const startBtn =
-                    document.getElementById("startBtn");
-                startBtn.disabled = false;
-                startBtn.textContent = "Starta quiz";
-            });
-
+        showFacit();
         return;
     }
 
@@ -181,7 +165,6 @@ function startTimer(questionText, answersDiv) {
     const timerEl = document.getElementById("timer");
     let time = 20;
 
-    // Visa startvärdet direkt
     timerEl.textContent = `Tid kvar: ${time}`;
 
     timer = setInterval(() => {
@@ -193,6 +176,48 @@ function startTimer(questionText, answersDiv) {
             nextQuestion(questionText, answersDiv);
         }
     }, 1000);
+}
+
+// ================== FACIT ==================
+function showFacit() {
+    clearInterval(timer);
+    mode = "facit";
+
+    const questionText = document.getElementById("questionText");
+    const answersDiv = document.getElementById("answers");
+
+    questionText.textContent = "✅ Facit";
+
+    answersDiv.innerHTML = results
+        .map((item, index) => {
+            return `
+                <div style="margin-bottom: 16px; text-align: left;">
+                    <strong>${index + 1}. ${item.question}</strong><br>
+                    Rätt svar: <strong>${item.correct_answer}</strong>
+                </div>
+            `;
+        })
+        .join("");
+
+    const btn = document.createElement("button");
+    btn.textContent = "Till startsidan";
+    btn.className = "restart-btn";
+
+    btn.addEventListener("click", () => {
+        results = [];
+        questions = [];
+        currentIndex = 0;
+        mode = "quiz";
+
+        document.getElementById("quizScreen").classList.add("hidden");
+        document.getElementById("startScreen").classList.remove("hidden");
+
+        const startBtn = document.getElementById("startBtn");
+        startBtn.disabled = false;
+        startBtn.textContent = "Starta quiz";
+    });
+
+    answersDiv.appendChild(btn);
 }
 
 // ================== UTILS ==================
