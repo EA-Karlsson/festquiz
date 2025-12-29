@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const categoryButtons = document.querySelectorAll("#categories button[data-category]");
     const randomBtn = document.getElementById("randomCategory");
     const musicBtn = document.getElementById("musicBtn");
+    const nextBtn = document.getElementById("nextBtn");
 
     // Säkerhetscheck
     if (
@@ -37,7 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
         !startBtn ||
         !questionCount ||
         !difficultySelect ||
-        !musicBtn
+        !musicBtn ||
+        !nextBtn
     ) {
         console.error("DOM saknas");
         return;
@@ -94,6 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
             difficultySelect
         )
     );
+
+    // ================== NÄSTA FRÅGA ==================
+    nextBtn.addEventListener("click", () => {
+        clearInterval(timer);
+        nextBtn.classList.add("hidden");
+        nextQuestion(questionText, answersDiv);
+    });
 
     // ================== MUSIKKNAPP ==================
     musicBtn.addEventListener("click", () => {
@@ -207,7 +216,7 @@ function startTimer(questionText, answersDiv) {
     clearInterval(timer);
 
     const timerEl = document.getElementById("timer");
-    let time = 20;
+    let time = 30;
 
     timerEl.textContent = `Tid kvar: ${time}`;
 
@@ -217,7 +226,7 @@ function startTimer(questionText, answersDiv) {
 
         if (time <= 0) {
             clearInterval(timer);
-            nextQuestion(questionText, answersDiv);
+            timerEl.textContent = "Tiden är slut – tryck Nästa";
         }
     }, 1000);
 }

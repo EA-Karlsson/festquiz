@@ -168,6 +168,20 @@ button:active {
     display: none;
 }
 
+/* Nästa-fråga-knapp */
+#nextBtn {
+    margin-top: 14px;
+    padding: 12px 20px;
+    font-size: 16px;
+    background: #333;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+#nextBtn:hover {
+    background: #444;
+}
+
 /* Mobil */
 @media (max-width: 600px) {
     #answers {
