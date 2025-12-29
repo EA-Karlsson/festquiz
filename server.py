@@ -2,7 +2,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import requests
 import os
-import re
 import html
 
 app = FastAPI()
@@ -14,12 +13,19 @@ app.add_middleware(
 )
 
 DEEPL_KEY = os.getenv("DEEPL_API_KEY")
-
 DEEPL_URL = "https://api-free.deepl.com/v2/translate"
 
 # ------------------ HJÄLPREGLER ------------------
 
 VERB_HINTS = {" is ", " are ", " was ", " were ", " did ", " does ", " has ", " have "}
+
+MEDIA_KEYWORDS = [
+    "film", "movie", "album", "song", "track",
+    "band", "artist", "game", "video game",
+    "character", "series", "quote", "citat",
+    "låten", "albumet", "bandet", "artisten",
+    "spelet", "karaktären", "tv-serien"
+]
 
 def looks_like_name_or_title(text: str) -> bool:
     words = text.strip().split()
@@ -30,12 +36,8 @@ def looks_like_name_or_title(text: str) -> bool:
     if any(v in lower for v in VERB_HINTS):
         return False
 
-    # Många versaler / Title Case → troligen namn/titel
     caps_ratio = sum(1 for c in text if c.isupper()) / max(len(text), 1)
-    if caps_ratio > 0.3:
-        return True
-
-    return False
+    return caps_ratio > 0.3
 
 
 def length_diff_too_big(original: str, translated: str) -> bool:
@@ -44,6 +46,18 @@ def length_diff_too_big(original: str, translated: str) -> bool:
     diff = abs(len(original) - len(translated)) / len(original)
     return diff > 0.6
 
+
+def is_media_question(text: str) -> bool:
+    t = text.lower()
+    return any(k in t for k in MEDIA_KEYWORDS)
+
+
+def looks_like_quote(text: str) -> bool:
+    if '"' in text or "'" in text:
+        return True
+    if len(text.split()) > 6:
+        return True
+    return False
 
 # ------------------ ÖVERSÄTTNING ------------------
 
@@ -68,17 +82,14 @@ def deepl_translate(text: str) -> str:
 
 
 def smart_translate(text: str) -> str:
-    # Skydda tomt / konstigt
     if not text or len(text.strip()) < 2:
         return text
 
-    # Skydda namn / titlar
     if looks_like_name_or_title(text):
         return text
 
     translated = deepl_translate(text)
 
-    # Fallback om konstig översättning
     if translated == text:
         return text
 
@@ -86,7 +97,6 @@ def smart_translate(text: str) -> str:
         return text
 
     return translated
-
 
 # ------------------ API ------------------
 
@@ -105,9 +115,24 @@ def quiz(amount: int = 10, category: str = ""):
         raw_incorrect = [html.unescape(a) for a in q["incorrect_answers"]]
 
         question_text = smart_translate(raw_question)
-        correct = smart_translate(raw_correct)
-        incorrect = [smart_translate(a) for a in raw_incorrect]
 
+        if is_media_question(question_text):
+            # MEDIA → svar ska ALDRIG översättas
+            correct = raw_correct
+            incorrect = raw_incorrect
+        else:
+            # Icke-media → selektiv översättning
+            if looks_like_quote(raw_correct):
+                correct = raw_correct
+            else:
+                correct = smart_translate(raw_correct)
+
+            incorrect = []
+            for a in raw_incorrect:
+                if looks_like_quote(a):
+                    incorrect.append(a)
+                else:
+                    incorrect.append(smart_translate(a))
 
         questions.append({
             "question": question_text,
