@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import requests
 import os
 import re
+import html
 
 app = FastAPI()
 app.add_middleware(
@@ -99,10 +100,14 @@ def quiz(amount: int = 10, category: str = ""):
     questions = []
 
     for q in data["results"]:
-        question_text = smart_translate(q["question"])
+        raw_question = html.unescape(q["question"])
+        raw_correct = html.unescape(q["correct_answer"])
+        raw_incorrect = [html.unescape(a) for a in q["incorrect_answers"]]
 
-        correct = smart_translate(q["correct_answer"])
-        incorrect = [smart_translate(a) for a in q["incorrect_answers"]]
+        question_text = smart_translate(raw_question)
+        correct = smart_translate(raw_correct)
+        incorrect = [smart_translate(a) for a in raw_incorrect]
+
 
         questions.append({
             "question": question_text,
