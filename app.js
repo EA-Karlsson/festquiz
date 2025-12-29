@@ -176,10 +176,18 @@ function nextQuestion(questionText, answersDiv) {
 
 // ================== TIMER ==================
 function startTimer(questionText, answersDiv) {
+    clearInterval(timer);
+
+    const timerEl = document.getElementById("timer");
     let time = 20;
+
+    // Visa startvärdet direkt
+    timerEl.textContent = `Tid kvar: ${time}`;
 
     timer = setInterval(() => {
         time--;
+        timerEl.textContent = `Tid kvar: ${time}`;
+
         if (time <= 0) {
             clearInterval(timer);
             nextQuestion(questionText, answersDiv);
