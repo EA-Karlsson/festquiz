@@ -5,7 +5,10 @@ import os
 import html
 import re
 
+# ================== APP & CACHE ==================
+
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,10 +16,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+TRANSLATION_CACHE: dict[str, str] = {}
+
 DEEPL_KEY = os.getenv("DEEPL_API_KEY")
 DEEPL_URL = "https://api-free.deepl.com/v2/translate"
 
-# ------------------ HJÄLPREGLER ------------------
+# ================== HJÄLPREGLER ==================
 
 VERB_HINTS = {" is ", " are ", " was ", " were ", " did ", " does ", " has ", " have "}
 
@@ -38,7 +43,7 @@ GAME_KEYWORDS = [
     "pack-a-punch", "pack a punch"
 ]
 
-# ------------------ DETEKTION ------------------
+# ================== DETEKTION ==================
 
 def looks_like_name_or_title(text: str) -> bool:
     words = text.strip().split()
@@ -71,13 +76,9 @@ def is_game_question(text: str) -> bool:
 
 
 def looks_like_quote(text: str) -> bool:
-    if '"' in text or "'" in text:
-        return True
-    if len(text.split()) > 6:
-        return True
-    return False
+    return '"' in text or "'" in text or len(text.split()) > 6
 
-# ------------------ NORMALISERING ------------------
+# ================== NORMALISERING ==================
 
 def normalize_numbers(text: str) -> str:
     if not text:
@@ -94,11 +95,14 @@ def normalize_numbers(text: str) -> str:
 
     return text
 
-# ------------------ ÖVERSÄTTNING ------------------
+# ================== ÖVERSÄTTNING ==================
 
 def deepl_translate(text: str) -> str:
-    if not DEEPL_KEY:
+    if not DEEPL_KEY or not text:
         return text
+
+    if text in TRANSLATION_CACHE:
+        return TRANSLATION_CACHE[text]
 
     try:
         r = requests.post(
@@ -111,8 +115,11 @@ def deepl_translate(text: str) -> str:
             timeout=5
         )
         data = r.json()
-        return data["translations"][0]["text"]
+        translated = data["translations"][0]["text"]
+        TRANSLATION_CACHE[text] = translated
+        return translated
     except Exception:
+        TRANSLATION_CACHE[text] = text
         return text
 
 
@@ -133,13 +140,21 @@ def smart_translate(text: str) -> str:
 
     return translated
 
-# ------------------ API ------------------
+# ================== API ==================
 
 @app.get("/quiz")
-def quiz(amount: int = 10, category: str = ""):
+def quiz(
+    amount: int = 10,
+    category: str = "",
+    difficulty: str = ""
+):
     url = f"https://opentdb.com/api.php?amount={amount}&type=multiple"
+
     if category:
         url += f"&category={category}"
+
+    if difficulty:
+        url += f"&difficulty={difficulty}"
 
     data = requests.get(url).json()
     questions = []
@@ -151,12 +166,12 @@ def quiz(amount: int = 10, category: str = ""):
 
         question_text = smart_translate(raw_question)
 
-        # 🎮 SPEL → ALLA SVAR ORÖRDA (engelska)
+        # 🎮 SPEL → ALLA SVAR ORÖRDA (ENGELSKA)
         if is_game_question(raw_question):
             correct = raw_correct
             incorrect = raw_incorrect
 
-        # 🎬 MEDIA (film/musik/TV) → svar orörda
+        # 🎬 MEDIA → SVAR ORÖRDA
         elif is_media_question(raw_question):
             correct = raw_correct
             incorrect = raw_incorrect

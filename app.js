@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const answersDiv = document.getElementById("answers");
     const startBtn = document.getElementById("startBtn");
     const questionCount = document.getElementById("questionCount");
+    const difficultySelect = document.getElementById("difficulty");
 
     const categoryButtons = document.querySelectorAll("#categories button[data-category]");
     const randomBtn = document.getElementById("randomCategory");
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         !answersDiv ||
         !startBtn ||
         !questionCount ||
+        !difficultySelect ||
         !musicBtn
     ) {
         console.error("DOM saknas");
@@ -72,7 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
             questionText,
             answersDiv,
             startBtn,
-            questionCount
+            questionCount,
+            difficultySelect
         )
     );
 
@@ -95,16 +98,18 @@ async function startQuiz(
     questionText,
     answersDiv,
     startBtn,
-    questionCount
+    questionCount,
+    difficultySelect
 ) {
     startBtn.disabled = true;
     startBtn.textContent = "Laddar frågor...";
 
     const count = questionCount.value;
+    const difficulty = difficultySelect.value;
 
     try {
         const res = await fetch(
-            `https://festquiz.onrender.com/quiz?amount=${count}&category=${selectedCategory}`
+            `https://festquiz.onrender.com/quiz?amount=${count}&category=${selectedCategory}&difficulty=${difficulty}`
         );
 
         if (!res.ok) throw new Error("Fetch failed");
@@ -246,7 +251,6 @@ function showFacit() {
 
     answersDiv.appendChild(btn);
 }
-
 
 // ================== UTILS ==================
 function shuffle(arr) {
