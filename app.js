@@ -1,4 +1,8 @@
 // ================== GLOBAL STATE ==================
+let music = new Audio("music.mp3");
+music.loop = true;
+music.volume = 0.5;
+
 let questions = [];
 let currentIndex = 0;
 let timer = null;
@@ -20,14 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const categoryButtons = document.querySelectorAll("#categories button[data-category]");
     const randomBtn = document.getElementById("randomCategory");
+    const musicBtn = document.getElementById("musicBtn");
 
+    // Säkerhetscheck
     if (
         !startScreen ||
         !quizScreen ||
         !questionText ||
         !answersDiv ||
         !startBtn ||
-        !questionCount
+        !questionCount ||
+        !musicBtn
     ) {
         console.error("DOM saknas");
         return;
@@ -68,6 +75,17 @@ document.addEventListener("DOMContentLoaded", () => {
             questionCount
         )
     );
+
+    // ================== MUSIKKNAPP ==================
+    musicBtn.addEventListener("click", () => {
+        if (music.paused) {
+            music.play();
+            musicBtn.textContent = "⏸️ Pausa musik";
+        } else {
+            music.pause();
+            musicBtn.textContent = "▶️ Starta musik";
+        }
+    });
 });
 
 // ================== START QUIZ ==================
@@ -180,6 +198,15 @@ function startTimer(questionText, answersDiv) {
 
 // ================== FACIT ==================
 function showFacit() {
+    // Stoppa musiken alltid vid facit
+    music.pause();
+    music.currentTime = 0;
+
+    const musicBtn = document.getElementById("musicBtn");
+    if (musicBtn) {
+        musicBtn.textContent = "▶️ Starta musik";
+    }
+
     clearInterval(timer);
     mode = "facit";
 
@@ -219,6 +246,7 @@ function showFacit() {
 
     answersDiv.appendChild(btn);
 }
+
 
 // ================== UTILS ==================
 function shuffle(arr) {
