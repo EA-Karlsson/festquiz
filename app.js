@@ -191,13 +191,6 @@ function showQuestion(questionText, answersDiv) {
         answersDiv.appendChild(div);
     });
 
-    // SPARA FACITDATA (med bokstav)
-    results.push({
-        question: q.question,
-        correct_answer: q.correct_answer,
-        correct_letter: correctLetter
-    });
-
     // VISA NÄSTA-KNAPPEN
     const nextBtn = document.getElementById("nextBtn");
     if (nextBtn) nextBtn.classList.remove("hidden");

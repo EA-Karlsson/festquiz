@@ -18,12 +18,10 @@ body {
     color: #fff;
     font-family: Arial, sans-serif;
     text-align: center;
-    min-height: 100vh;
 }
 
 #quizScreen {
     padding: 16px;
-    min-height: 100vh;
 }
 
 /* Rubriker */
