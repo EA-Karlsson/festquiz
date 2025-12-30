@@ -202,6 +202,26 @@ function showQuestion(questionText, answersDiv) {
 
 // ================== NEXT QUESTION ==================
 function nextQuestion(questionText, answersDiv) {
+    const q = questions[currentIndex];
+
+    // find correct letter from rendered answers
+    let correctLetter = "";
+    const answerEls = document.querySelectorAll(".answer");
+
+    answerEls.forEach(el => {
+        if (el.textContent.includes(q.correct_answer)) {
+            correctLetter =
+                el.querySelector("strong")?.textContent.replace(".", "") || "";
+        }
+    });
+
+    // store result ONCE per question
+    results.push({
+        question: q.question,
+        correct_answer: q.correct_answer,
+        correct_letter: correctLetter
+    });
+
     currentIndex++;
 
     if (currentIndex >= questions.length) {
