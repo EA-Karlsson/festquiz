@@ -99,6 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ================== NÄSTA FRÅGA ==================
     nextBtn.addEventListener("click", () => {
+        if (mode !== "quiz") return;
+
         clearInterval(timer);
         nextBtn.classList.add("hidden");
         nextQuestion(questionText, answersDiv);
