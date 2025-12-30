@@ -177,8 +177,10 @@ function showQuestion(questionText, answersDiv) {
     // SPARA FACITDATA (visas först i slutet)
     results.push({
         question: q.question,
-        correct_answer: q.correct_answer
+        correct_answer: q.correct_answer,
+        correct_letter: correctLetter
     });
+
 
     questionText.textContent = q.question;
     answersDiv.innerHTML = "";
@@ -188,13 +190,19 @@ function showQuestion(questionText, answersDiv) {
         ...q.incorrect_answers
     ]);
     const labels = ["A", "B", "C", "D"];
+    let correctLetter = "";
 
     answers.forEach((a, i) => {
+        if (a === q.correct_answer) {
+            correctLetter = labels[i];
+        }
+
         const div = document.createElement("div");
         div.className = "answer";
         div.innerHTML = `<strong>${labels[i]}.</strong> ${a}`;
         answersDiv.appendChild(div);
     });
+
 
     // VISA NÄSTA-KNAPPEN
     const nextBtn = document.getElementById("nextBtn");
@@ -264,7 +272,7 @@ function showFacit() {
                 <div class="facit-item">
                     <strong>${index + 1}. ${item.question}</strong>
                     <div class="facit-answer">
-                        Rätt svar: <span>${item.correct_answer}</span>
+                        Rätt svar: Rätt svar: <span>${item.correct_letter}</span> – ${item.correct_answer}
                     </div>
                 </div>
             `;
