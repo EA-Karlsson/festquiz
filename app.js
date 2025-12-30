@@ -174,28 +174,16 @@ function showQuestion(questionText, answersDiv) {
         return;
     }
 
-    // SPARA FACITDATA (visas först i slutet)
-    results.push({
-        question: q.question,
-        correct_answer: q.correct_answer,
-        correct_letter: correctLetter
-    });
-
-
     questionText.textContent = q.question;
     answersDiv.innerHTML = "";
 
-    const answers = shuffle([
-        q.correct_answer,
-        ...q.incorrect_answers
-    ]);
+    const answers = shuffle([q.correct_answer, ...q.incorrect_answers]);
     const labels = ["A", "B", "C", "D"];
+
     let correctLetter = "";
 
     answers.forEach((a, i) => {
-        if (a === q.correct_answer) {
-            correctLetter = labels[i];
-        }
+        if (a === q.correct_answer) correctLetter = labels[i];
 
         const div = document.createElement("div");
         div.className = "answer";
@@ -203,14 +191,18 @@ function showQuestion(questionText, answersDiv) {
         answersDiv.appendChild(div);
     });
 
+    // SPARA FACITDATA (med bokstav)
+    results.push({
+        question: q.question,
+        correct_answer: q.correct_answer,
+        correct_letter: correctLetter
+    });
 
     // VISA NÄSTA-KNAPPEN
     const nextBtn = document.getElementById("nextBtn");
-    if (nextBtn) {
-        nextBtn.classList.remove("hidden");
-    }
+    if (nextBtn) nextBtn.classList.remove("hidden");
 
-    startTimer(questionText, answersDiv);
+    startTimer();
 }
 
 // ================== NEXT QUESTION ==================
@@ -226,7 +218,7 @@ function nextQuestion(questionText, answersDiv) {
 }
 
 // ================== TIMER ==================
-function startTimer(questionText, answersDiv) {
+function startTimer() {
     clearInterval(timer);
 
     const timerEl = document.getElementById("timer");
@@ -247,14 +239,11 @@ function startTimer(questionText, answersDiv) {
 
 // ================== FACIT ==================
 function showFacit() {
-    // Stoppa musiken alltid vid facit
     music.pause();
     music.currentTime = 0;
 
     const musicBtn = document.getElementById("musicBtn");
-    if (musicBtn) {
-        musicBtn.textContent = "▶️ Starta musik";
-    }
+    if (musicBtn) musicBtn.textContent = "▶️ Starta musik";
 
     clearInterval(timer);
     mode = "facit";
@@ -262,24 +251,21 @@ function showFacit() {
     const questionText = document.getElementById("questionText");
     const answersDiv = document.getElementById("answers");
 
-    // Titel
     questionText.innerHTML = `<span class="facit-title">✅ Facit</span>`;
 
-    // Facit-lista
     answersDiv.innerHTML = results
         .map((item, index) => {
             return `
                 <div class="facit-item">
                     <strong>${index + 1}. ${item.question}</strong>
                     <div class="facit-answer">
-                        Rätt svar: Rätt svar: <span>${item.correct_letter}</span> – ${item.correct_answer}
+                        Rätt svar: <span>${item.correct_letter}</span> – ${item.correct_answer}
                     </div>
                 </div>
             `;
         })
         .join("");
 
-    // Tillbaka-knapp
     const btn = document.createElement("button");
     btn.textContent = "Till startsidan";
     btn.className = "restart-btn";
